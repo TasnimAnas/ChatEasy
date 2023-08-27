@@ -1,7 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:country_code_picker/country_code_picker.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter/material.dart';
+import 'package:gdpr_dialog/gdpr_dialog.dart' as gdpr;
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 String _url = 'https://wa.me/';
 String _whatsapp = 'https://wa.me/';
@@ -18,9 +19,10 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   TextEditingController _mobileController = TextEditingController();
   TextEditingController _textController = TextEditingController();
+
   _sendURL() async {
-    if (await canLaunch(_url)) {
-      await launch(_url);
+    if (await canLaunchUrl(Uri.parse(_url))) {
+      await launchUrl(Uri.parse(_url), mode: LaunchMode.externalApplication);
     } else {
       throw 'Could not launch $_url';
     }
@@ -61,6 +63,22 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
     return banner.load();
+  }
+
+  void gdprConsent() async {
+    final consent = await gdpr.GdprDialog.instance.getConsentStatus();
+    if (consent == gdpr.ConsentStatus.required ||
+        consent == gdpr.ConsentStatus.unknown) {
+      // await gdpr.GdprDialog.instance.resetDecision();
+      await gdpr.GdprDialog.instance.showDialog(
+          isForTest: false, testDeviceId: 'B292DCBE404628828AFB70BBBBB6B248');
+    }
+  }
+
+  @override
+  void initState() {
+    gdprConsent();
+    super.initState();
   }
 
   @override
