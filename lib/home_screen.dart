@@ -229,7 +229,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: const Text('Send'),
                           style: ElevatedButton.styleFrom(
                               fixedSize: const Size(190, 45),
-                              primary: const Color(0xFF2FCE5D),
+                              backgroundColor: const Color(0xFF2FCE5D),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(40)),
                               padding: const EdgeInsets.symmetric(
